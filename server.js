@@ -3,7 +3,8 @@ const express = require('express');
 const app = express();
 
 const admin = require("firebase-admin");
-const credentials = require("./serviceAccountKeyBAS.json");
+const credentials = require("./serviceAccountKeyTest.json");
+// const credentials = require("./serviceAccountKeyBAS.json");
 
 admin.initializeApp({
     credential: admin.credential.cert(credentials)
@@ -29,10 +30,24 @@ app.post('/create', async(req, res) => {
     }
 });
 
+// app.get('/read/all', async(req, res) => {
+//     try{
+//         const usersRef = db.collection("users");
+//         const response = await usersRef.get();
+//         let responseArr = [];
+//         response.forEach(doc => {
+//             responseArr.push(doc.data());
+//         });
+
+//         res.send(responseArr);
+//     } catch(error) {
+//         res.send(error);
+//     }
+// });
+
 app.get('/read/all', async(req, res) => {
     try{
-        const usersRef = db.collection("CustomerData");
-        // const usersRef = db.collection("users");
+        const usersRef = db.collection("CashOutData");
         const response = await usersRef.get();
         let responseArr = [];
         response.forEach(doc => {
@@ -57,10 +72,14 @@ app.get('/read/:id', async(req, res) => {
 
 app.post('/update/:id', async(req, res) => {
     try{
+        // const dataUpdate = {
+        //     email: req.body.email,
+        //     firstName: req.body.firstName,
+        //     lastName: req.body.lastName
+        // };
+
         const dataUpdate = {
-            email: req.body.email,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName
+            email: req.body.email
         };
 
         const usersRef = await db.collection("users").doc(req.params.id).update(dataUpdate);
@@ -70,6 +89,20 @@ app.post('/update/:id', async(req, res) => {
         res.send(error);
     }
 });
+
+// app.post('/update/:id', async(req, res) => {
+//     try{
+//         const dataUpdate = {
+//             coDateAndTimeApproved: req.body.coDateAndTimeApproved
+//         };
+
+//         const usersRef = await db.collection("CashOutData").doc(req.params.id).update(dataUpdate);
+        
+//         res.send(usersRef);
+//     } catch(error) {
+//         res.send(error);
+//     }
+// });
 
 app.delete('/delete/:id', async(req, res) => {
     try{
